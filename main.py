@@ -41,8 +41,9 @@ from ottosensors  import DHT     # sense-kit modules
 
 buzzer    = OttoBuzzer(25)
 motor     = OttoMotor(13, 14)
-ring      = OttoNeoPixel(4, 13)
+#ring      = OttoNeoPixel(4, 13)
 ultrasonic= OttoUltrasonic(18, 19)
+digital_pin_26 = Pin(26, Pin.IN) # Tilt sensor
 
 
 # 1) Initialize
