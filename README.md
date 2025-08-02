@@ -36,6 +36,152 @@ Battery voltage: GPIO 39
 
 
 
+# Setup enviroment
+[Set up video Arduino IDE](https://www.youtube.com/watch?v=5ssD2PqnxxY)
+---
+
+## ✅ Requirements
+
+### 💻 Software:
+
+* Visual Studio Code
+* [PlatformIO extension](https://platformio.org/install/ide?install=vscode) (or Arduino extension for VSCode)
+* USB drivers (e.g., CH340 for Arduino Nano clones)
+
+---
+
+## 🧭 Step-by-Step Setup with PlatformIO (Recommended)
+
+### 1. **Install VSCode & PlatformIO**
+
+* Open VSCode
+* Go to Extensions (`Ctrl+Shift+X`)
+* Search for **PlatformIO IDE** and install it
+
+### 2. **Create a New Project**
+
+* Open PlatformIO Home (Alien icon in the sidebar)
+* Click “New Project”
+
+  * Name: `OttoProject`
+  * Board: Choose `ESP32 Dev Module` 
+  * Framework: Arduino
+  * Location: choose your folder
+
+### 3. **Write or Paste Your Code**
+
+* Your code goes into `src/main.cpp`
+
+**Example:**
+
+```cpp
+import machine, time                       #importing machine and time libraries
+from time import sleep                     #importing sleep class
+from machine import Pin, ADC, PWM, SoftI2C #importing classes
+from ottomotor import OttoMotor
+offset = 0
+
+offset = 0
+motor = OttoMotor(13, 14)             # Connectors 10 & 11
+
+motor.leftServo.freq(50)
+motor.rightServo.freq(50)
+motor.leftServo.duty(109- offset)
+motor.rightServo.duty(43+ offset)
+sleep(1)
+motor.rightServo.duty(0)
+motor.leftServo.duty(0)
+motor.rightServo.duty(45+ offset)
+motor.leftServo.duty(45- offset)
+sleep(0.4)
+motor.rightServo.duty(0)
+motor.leftServo.duty(0)
+motor.leftServo.freq(50)
+motor.rightServo.freq(50)
+motor.leftServo.duty(43- offset)
+motor.rightServo.duty(109+ offset)
+sleep(1)
+motor.rightServo.duty(0)
+motor.leftServo.duty(0)
+motor.rightServo.duty(115+ offset)
+motor.leftServo.duty(115- offset)
+sleep(0.4)
+motor.rightServo.duty(0)
+motor.leftServo.duty(0)
+
+```
+
+> Make sure you have installed the Otto9 library (see below).
+
+---
+
+### 4. **Install Otto Library**
+
+You can add Otto libraries using PlatformIO:
+
+* Go to the **PlatformIO Library** tab
+* Search for `Otto9`
+* Click "Add to Project"
+
+OR manually add it in `platformio.ini`:
+
+```ini
+[env:nanoatmega328]
+platform = atmelavr
+board = nanoatmega328
+framework = arduino
+lib_deps =
+    OttoDIY/Otto9@^1.0.3
+```
+
+---
+
+### 5. **Connect Otto via USB**
+
+* Plug in Otto to your PC
+* PlatformIO should auto-detect the serial port
+
+If not, check:
+
+* **Device Manager** (Windows): Look under COM ports
+* **`ls /dev/tty.*`** (Mac): Look for `/dev/tty.usbserial-*` or similar
+
+Add to `platformio.ini` if needed:
+
+```ini
+upload_port = COM3  ; Replace with your actual COM port
+```
+
+---
+
+### 6. **Upload Your Code**
+
+Click the **arrow icon** at the bottom bar of PlatformIO (or run `PlatformIO: Upload` from Command Palette)
+
+✅ If everything is correct, the code will compile and upload to Otto.
+
+---
+
+## 🛠️ Troubleshooting
+
+| Problem                  | Fix                                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| "Board not found"        | Check COM port, drivers                                                             |
+| “avrdude: stk500…” error | Wrong board or bootloader — try both `ATmega328P` and `ATmega328P (Old Bootloader)` |
+| RGB/OLED not working     | Check for hardware conflicts as you noted                                           |
+
+---
+
+## 📎 Alternative: Arduino Extension in VSCode
+
+You can also use the **Arduino extension** instead of PlatformIO:
+
+* Install Arduino IDE (to get the tools and drivers)
+* Install Arduino extension in VSCode
+* Set up `arduino.json` and `c_cpp_properties.json`
+* But: **less flexible than PlatformIO**, harder to manage libraries
+
+---
 
 
 
